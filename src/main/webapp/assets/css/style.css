@@ -1,0 +1,33 @@
+
+
+/* 4. Điều chỉnh form/box đăng nhập (nếu cần) */
+/* Cập nhật box đăng nhập để có background trắng và border radius */
+/*.card { /* Hoặc tên class chứa form đăng nhập của bạn */
+ /*   background-color: rgba(255, 255, 255, 0.95); /* Làm form hơi trong suốt một chút */
+ /*   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); /* Tạo bóng đổ ấn tượng hơn */
+  /*  border: none;
+    padding: 30px; /* Thêm padding bên trong form */
+/*}
+/* FORM LOGIN – CARD STYLE */
+.card {
+    background: rgba(255, 255, 255, 0.96);      /* Trắng, hơi trong suốt */
+    border-radius: 16px;                       /* Bo góc mềm mại */
+    padding: 30px;                             /* Khoảng cách trong */
+    border: 1px solid rgba(255, 255, 255, 0.4); /* Viền nhẹ */
+
+    /* Hiệu ứng bóng đổ đẹp */
+    box-shadow:
+        0 4px 10px rgba(0, 0, 0, 0.15),
+        0 10px 30px rgba(0, 0, 0, 0.25);
+
+    backdrop-filter: blur(8px);                 /* Làm mờ background phía sau (hiện đại) */
+    -webkit-backdrop-filter: blur(8px);         /* Safari */
+}
+
+/* Bổ sung style cho tiêu đề trong card (nếu có) */
+.card h3,
+.card .card-title {
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 20px;
+}
