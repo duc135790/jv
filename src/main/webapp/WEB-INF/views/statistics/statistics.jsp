@@ -82,6 +82,11 @@
             color: white;
         }
 
+        .icon-info {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+        }
+
         .stats-value {
             font-size: 2rem;
             font-weight: bold;
@@ -131,6 +136,7 @@
             border-radius: 15px;
             padding: 30px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
         }
 
         .table thead {
@@ -142,6 +148,23 @@
             border: none;
             padding: 15px;
             font-weight: 600;
+        }
+
+        .badge-role {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .badge-admin {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+        }
+
+        .badge-manager {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
         }
     </style>
 </head>
@@ -196,9 +219,9 @@
     <!-- Header -->
     <div class="header-section">
         <h2 style="margin: 0; font-size: 2rem; font-weight: 600;">
-            <i class="fas fa-chart-line"></i> Thống Kê Doanh Thu
+            <i class="fas fa-chart-line"></i> Thống Kê Hệ Thống
         </h2>
-        <p style="margin: 10px 0 0 0; opacity: 0.9;">Theo dõi doanh thu và hiệu quả kinh doanh</p>
+        <p style="margin: 10px 0 0 0; opacity: 0.9;">Theo dõi doanh thu, hiệu quả kinh doanh và quản lý tài khoản</p>
     </div>
 
     <!-- ✅ KIỂM TRA DỮ LIỆU -->
@@ -250,7 +273,7 @@
         </div>
 
         <div class="row mt-4">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <div class="stats-card" style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%); color: white;">
                     <h5 style="margin: 0 0 10px 0;">Tổng Doanh Thu</h5>
                     <div class="stats-value" style="color: white; font-size: 2.5rem;">
@@ -258,7 +281,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <div class="stats-card" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white;">
                     <h5 style="margin: 0 0 10px 0;">Doanh Thu Tháng Này</h5>
                     <div class="stats-value" style="color: white; font-size: 2.5rem;">
@@ -266,7 +289,76 @@
                     </div>
                 </div>
             </div>
+            <div class="col-md-4">
+                <div class="stats-card">
+                    <div class="stats-icon icon-info">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stats-value">${totalUsers != null ? totalUsers : 0}</div>
+                    <div class="stats-label">Tổng Số Tài Khoản</div>
+                </div>
+            </div>
         </div>
+    </div>
+
+    <!-- ✅ BẢNG QUẢN LÝ TÀI KHOẢN NGƯỜI DÙNG -->
+    <div class="table-container">
+        <h4 class="mb-4">
+            <i class="fas fa-users-cog"></i> Danh Sách Tài Khoản Hệ Thống
+            <span class="badge bg-primary ms-2">${totalUsers} tài khoản</span>
+        </h4>
+
+        <c:if test="${not empty userCountByRole}">
+            <div class="mb-3">
+                <c:forEach var="entry" items="${userCountByRole}">
+                    <span class="badge-role ${entry.key == 'admin' ? 'badge-admin' : 'badge-manager'} me-2">
+                        <i class="fas fa-user-${entry.key == 'admin' ? 'shield' : 'tie'}"></i>
+                        ${entry.key}: ${entry.value}
+                    </span>
+                </c:forEach>
+            </div>
+        </c:if>
+
+        <c:choose>
+            <c:when test="${empty allUsers}">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> Chưa có tài khoản nào trong hệ thống.
+                </div>
+            </c:when>
+            <c:otherwise>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>Username</th>
+                                <th>Họ Tên</th>
+                                <th>Vai Trò</th>
+                                <th>Ngày Tạo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <c:forEach var="user" items="${allUsers}" varStatus="status">
+                                <tr>
+                                    <td>${status.index + 1}</td>
+                                    <td><strong>${user.username}</strong></td>
+                                    <td>${user.fullName}</td>
+                                    <td>
+                                        <span class="badge-role ${user.role == 'admin' ? 'badge-admin' : 'badge-manager'}">
+                                            <i class="fas fa-user-${user.role == 'admin' ? 'shield' : 'tie'}"></i>
+                                            ${user.role}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <fmt:formatDate value="${user.createdAt}" pattern="dd/MM/yyyy HH:mm"/>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </tbody>
+                    </table>
+                </div>
+            </c:otherwise>
+        </c:choose>
     </div>
 
     <!-- Filter Section -->

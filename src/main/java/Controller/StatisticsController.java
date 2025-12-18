@@ -10,6 +10,7 @@ import models.User;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 @WebServlet(name = "StatisticsController", urlPatterns = {"/thong-ke"})
@@ -88,11 +89,22 @@ public class StatisticsController extends HttpServlet {
             request.setAttribute("recentPayments", statisticsService.getRecentPayments(userId, 5));
             System.out.println("💳 Recent payments loaded");
 
-            // ✅ BỎ DÒNG SO SÁNH DOANH THU (gây lỗi compile)
-            // Map<String, Object> comparison = statisticsService.compareMonthlyRevenue(userId);
-            // request.setAttribute("comparison", comparison);
+            // ✅ 8. LẤY DANH SÁCH TÀI KHOẢN NGƯỜI DÙNG
+            List<User> allUsers = statisticsService.getAllUsers();
+            request.setAttribute("allUsers", allUsers);
+            System.out.println("👥 Total users in system: " + allUsers.size());
 
-            // 8. Forward đến JSP
+            // ✅ 9. LẤY THỐNG KÊ THEO ROLE
+            Map<String, Integer> userCountByRole = statisticsService.getUserCountByRole();
+            request.setAttribute("userCountByRole", userCountByRole);
+            System.out.println("📊 User count by role: " + userCountByRole);
+
+            // ✅ 10. TỔNG SỐ USER
+            int totalUsers = statisticsService.getTotalUsers();
+            request.setAttribute("totalUsers", totalUsers);
+            System.out.println("📊 Total users: " + totalUsers);
+
+            // 11. Forward đến JSP
             System.out.println("✅ Forwarding to statistics.jsp");
             request.getRequestDispatcher(STATISTICS_JSP).forward(request, response);
 

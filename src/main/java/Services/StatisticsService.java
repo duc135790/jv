@@ -2,6 +2,7 @@ package Services;
 
 import dao.StatisticsDAO;
 import models.Payment;
+import models.User;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -65,9 +66,34 @@ public class StatisticsService {
     }
 
     /**
-     * Lấy danh sách thanh toán gần đây
+     * Lấy danh sách thanh toán gần đây nhất
      */
     public List<Payment> getRecentPayments(int userId, int limit) {
         return statisticsDAO.getRecentPayments(userId, limit);
+    }
+
+    // ========================================================================
+    // ✅ PHẦN MỚI: QUẢN LÝ TÀI KHOẢN NGƯỜI DÙNG (ADMIN ONLY)
+    // ========================================================================
+
+    /**
+     * ✅ Lấy danh sách tất cả users trong hệ thống
+     */
+    public List<User> getAllUsers() {
+        return statisticsDAO.getAllUsers();
+    }
+
+    /**
+     * ✅ Lấy thống kê số lượng user theo role
+     */
+    public Map<String, Integer> getUserCountByRole() {
+        return statisticsDAO.getUserCountByRole();
+    }
+
+    /**
+     * ✅ Đếm tổng số user
+     */
+    public int getTotalUsers() {
+        return statisticsDAO.getTotalUsers();
     }
 }

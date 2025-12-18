@@ -2,6 +2,7 @@ package dao;
 
 import config.DatabaseConfig;
 import models.Payment;
+import models.User;
 
 import java.math.BigDecimal;
 import java.sql.*;
@@ -9,7 +10,7 @@ import java.util.*;
 
 /**
  * DAO XỬ LÝ THỐNG KÊ - ĐÃ HOÀN THIỆN
- * Cung cấp dữ liệu cho Dashboard thống kê doanh thu
+ * Cung cấp dữ liệu cho Dashboard thống kê doanh thu và quản lý users
  */
 public class StatisticsDAO {
 
@@ -343,5 +344,81 @@ public class StatisticsDAO {
             e.printStackTrace();
         }
         return BigDecimal.ZERO;
+    }
+
+    // ========================================================================
+    // ✅ PHẦN MỚI: QUẢN LÝ TÀI KHOẢN NGƯỜI DÙNG (ADMIN ONLY)
+    // ========================================================================
+
+    /**
+     * ✅ LẤY DANH SÁCH TẤT CẢ TÀI KHOẢN TRONG HỆ THỐNG (ADMIN ONLY)
+     */
+    public List<User> getAllUsers() {
+        List<User> users = new ArrayList<>();
+
+        String SQL = "SELECT id, username, full_name, role, created_at " +
+                "FROM users " +
+                "ORDER BY created_at DESC";
+
+        try (Connection conn = DatabaseConfig.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(SQL)) {
+
+            while (rs.next()) {
+                User user = new User();
+                user.setId(rs.getInt("id"));
+                user.setUsername(rs.getString("username"));
+                user.setFullName(rs.getString("full_name"));
+                user.setRole(rs.getString("role"));
+                user.setCreatedAt(rs.getTimestamp("created_at"));
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            System.err.println("❌ Lỗi getAllUsers: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return users;
+    }
+
+    /**
+     * ✅ THỐNG KÊ SỐ LƯỢNG USER THEO ROLE
+     */
+    public Map<String, Integer> getUserCountByRole() {
+        Map<String, Integer> result = new HashMap<>();
+
+        String SQL = "SELECT role, COUNT(*) as count " +
+                "FROM users " +
+                "GROUP BY role";
+
+        try (Connection conn = DatabaseConfig.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(SQL)) {
+
+            while (rs.next()) {
+                result.put(rs.getString("role"), rs.getInt("count"));
+            }
+        } catch (SQLException e) {
+            System.err.println("❌ Lỗi getUserCountByRole: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    /**
+     * ✅ ĐẾM TỔNG SỐ USER TRONG HỆ THỐNG
+     */
+    public int getTotalUsers() {
+        String SQL = "SELECT COUNT(*) FROM users";
+        try (Connection conn = DatabaseConfig.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(SQL)) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.err.println("❌ Lỗi getTotalUsers: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return 0;
     }
 }

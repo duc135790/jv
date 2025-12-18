@@ -10,7 +10,7 @@ public class DatabaseConfig {
     // THÔNG TIN KẾT NỐI (CẦN CHỈNH SỬA NẾU KHÁC)
     private static final String URL = "jdbc:mysql://localhost:3306/QuanLyPhongTro"; 
     private static final String USER = "root"; 
-    private static final String PASS = "123456"; // Đổi thành mật khẩu của bạn nếu có
+    private static final String PASS = ""; // Đổi thành mật khẩu của bạn nếu có
 
     public static Connection getConnection() {
         try {
